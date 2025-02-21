@@ -7,7 +7,7 @@ def bfs(capacity_matrix, flow_matrix, source, sink, parent):
     queue = deque([source])
     visited[source] = True
 
-    print("\n🔍 BFS Search Started")
+    print("\n BFS Search Started")
 
     while queue:
         current_node = queue.popleft()
@@ -69,7 +69,7 @@ def edmonds_karp(capacity_matrix, source, sink):
 
         path.append(source)  # Include source in the path
         path.reverse()  # Correct order from source to sink
-        print(f"🚀 Augmenting path: {path[::-1]}, Flow added: {path_flow}")
+        print(f" Augmenting path: {path[::-1]}, Flow added: {path_flow}")
 
         current_node = sink
         while current_node != source:
