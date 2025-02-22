@@ -82,9 +82,7 @@ def range_query_dict(store, min_price, max_price):
 def range_query_tree(tree, min_price, max_price):
     result = []
 
-    for product_id, product in tree.items(
-        min_price, max_price
-    ):  # we can make much faster search if store prices as id's
+    for product_id, product in tree.items(min_price, max_price):
 
         result.append(
             {
