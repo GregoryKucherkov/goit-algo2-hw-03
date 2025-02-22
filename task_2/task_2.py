@@ -22,46 +22,6 @@ def add_item_to_dict(filename):
     return store
 
 
-# classic way to store ID's as keys
-# def add_item_to_tree(filename):
-#     ob_tree = OOBTree()
-#     with open(filename, "r") as csvfile:
-#         reader = csv.DictReader(csvfile)
-
-#         for row in reader:
-#             ob_tree.update(
-#                 {
-#                     row["ID"]: {
-#                         "name": row["Name"],
-#                         "category": row["Category"],
-#                         "price": float(row["Price"]),
-#                     }
-#                 }
-#             )
-
-#     return ob_tree
-
-
-# altrenative way to store prices as ID, in order to utilize BTree search
-def add_item_to_tree(filename):
-    ob_tree = OOBTree()
-    with open(filename, "r") as csvfile:
-        reader = csv.DictReader(csvfile)
-
-        for row in reader:
-            ob_tree.update(
-                {
-                    float(row["Price"]): {
-                        "name": row["Name"],
-                        "category": row["Category"],
-                        "ID": row["ID"],
-                    }
-                }
-            )
-
-    return ob_tree
-
-
 def range_query_dict(store, min_price, max_price):
     result = []
     for product_id, product in store.items():
@@ -79,20 +39,26 @@ def range_query_dict(store, min_price, max_price):
     return result
 
 
-def range_query_tree(tree, min_price, max_price):
-    result = []
+def add_item_to_tree(filename):
+    ob_tree = OOBTree()
 
-    for product_id, product in tree.items(min_price, max_price):
+    with open(filename, "r") as csvfile:
+        reader = csv.DictReader(csvfile)
 
-        result.append(
-            {
-                "ID": product["ID"],
-                "name": product["name"],
-                "category": product["category"],
-                "price": product_id,
+        for row in reader:
+            item = {
+                "name": row["Name"],
+                "category": row["Category"],
+                "price": float(row["Price"]),
+                "id": row["ID"],
             }
-        )
-    return result
+            ob_tree[(item["price"], item["id"])] = item
+
+    return ob_tree
+
+
+def range_query_tree(tree, min_price, max_price):
+    return tree.items((min_price,), (max_price,))
 
 
 if __name__ == "__main__":
@@ -118,8 +84,8 @@ if __name__ == "__main__":
     The output shows efficiency of BTree's, but only if utilize search by ID's, so, in order to use this feature, I make prices ID's, otherwise it even slower then dict's.
     With this implementation we can get the following results:
 
-    Total range_query time for Dict: 1.39537279 seconds
-    Total range_query time for OOBTree: 0.36236483 seconds
+    Total range_query time for Dict: 1.22675029 seconds
+    Total range_query time for OOBTree: 0.00015217 seconds
 
     The difference is significant.
     """
